@@ -1,0 +1,15 @@
+The RecSys Challenge 2017 is organized by XING, xxxx, xxxxx. XING is a social network for business. People use XING, for example, to find a job and recruiters use XING to find the right candidate for a job. At the moment, XING has more than xxxxx Million users and around xxxxx Million job postings on the platform. Given a user, the goal of the job recommendation system is to predict those job postings that are likely to be relevant to the user. In order to fulfill this task, various data sources can be exploited. Job recommendations are displayed on xing.com as well as in XING’s mobile apps.
+
+In this year’s edition of the RecSys Challenge, along  with an offline evaluation, there would follow an online evaluation task for which the offline evaluation will serve as an entry gate to the online evaluation. The winner of RecSys Challenge 2017 would be the winner of the online challenge.  
+
+In this RecSys Challenge 2017, the task is: given a new job posting, predict those users that (a) may be interested in receiving the job posting as recommendation and (b) that are also appropriate candidates for the given job from recruiter point-of-view.
+
+
+A detailed description of the challenge can be found on the website of the RecSys Challenge 2017. Accepted contributions will be presented during the RecSys Challenge 2017 Workshop.
+
+ORGANIZERS
+
+Fabian Abel, XING AG, Germany
+Daniel Kohlsdorf, XING AG, Germany
+Yashar Deldjoo, Politecnico di Milano, Italy
+Mehdi Elahi, Free University of Bozen, Bolzano
