@@ -19,7 +19,7 @@
   </head>
 
   <body>
-
+          
     <div class="container">
       <div class="header clearfix" style="padding-bottom:5px;">
         <span style="float:left; padding-right: 15px;">
@@ -29,7 +29,17 @@
 
       <div style="margin-top:30px;font-family: Georgia,Helvetica,Arial,sans-serif">
         <ul class="nav nav-pills navbar-nav navbar-left">
-            <li role="presentation"><a href="#about">About</a></li>
+            <li role="presentation" class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">About <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#about">About</a></li>
+                <li><a href="#scenario">Scenario</a></li>
+                <li><a href="#challenges">Challenges</a></li>
+                <li><a href="#evaluation">Evaluation</a></li>
+                <li><a href="#dataset">Dataset</a></li>
+          </ul>
+            </li>
             <li role="presentation"><a href="#participation">Participate</a></li>
             <li role="presentation"><a href="#dates">Timeline</a></li>
             <li role="presentation"><a href="#dates">Organizers</a></li>
@@ -37,6 +47,8 @@
         </ul>
       </div>
       </div>
+
+
 
       <!-- ABOUT -->
       <div id="about" class="lead">
@@ -117,7 +129,52 @@
 
       <div id="evaluation" class="lead">
         <h2>Evaluation Metrics</h2>
-        <div class="alert alert-success" role="alert">Coming soon...</div>
+        <div class="alert alert-success" role="alert">To be finalized. Current plan below:</div>
+        <p>Given a list of target items <code>targetItems</code>, for which the recommender selects those users to whom <code>item in T</code>, is pushed as recommendation, we compute the the leaderboard score as follows:</p>
+
+        <pre>score(targetItems) = targetItems.map(item => score(item, recommendations(item))).sum</pre>
+
+        <p>Here, <code>recommendations(item)</code> specifies the list of users who will receive the given item as push recommendation. The function <code>score(item, users)</code> is defined as follows:</p>
+
+<pre>score(item, users) = 
+  users.map(u => userSuccess(item,u)).sum + itemSuccess(item, users)
+  
+  userSucess(item, user) = 
+    (
+        if (clicked) 1 else 0 
+      + if (bookmarked || replied) 5 else 0 
+      + if (recruiter interest) 20 else 0 
+      - if (delete only) 10 else 0 
+    ) * premiumBoost(user)
+
+  premiumBoost(user) = if (user.isPremium) 2 else 1 
+      
+  itemSuccess(item, users) = 
+    if (users.filter(u => success(item, u) > 0).size > 1) {
+      if (item.isPaid) 50
+      else 25
+    } else 0 
+</pre>
+  <p>Meaning:</p>
+  <ul>
+    <li><code>score(item, users)</code> sums up the success rates of the users and the item-based success rate.</li>
+    <li><code>userSucess(item, user)</code> scores a user-item pair based on the interactions between those items:
+      <ul>
+        <li>clicks: user clicked on the pushed recommendation (1 point)</li>
+        <li>bookmarks/replies: the user bookmarked the item or clicked on the reply button (which guides the user to the application form of the job posting) (5 points)</li>
+        <li>recruiter interest: some recruiter showed interest into the user (e.g. clicked on the profile) for the given job item (20 points)</li>
+        <li>deletes: in case we solely observed that the user delted the item (no click, no bookmark/reply, no recruiter interest), we count the pushed recommendation as negative feedback (-10 points)</li>
+      </ul>
+    </li>
+    <li><code>premiumBoost(user)</code> userSuccess scores count double points for premium users.</li>
+    <li><code>itemSuccess(item, users)</code> if at least one successful push recommendation was created for a given item then this counts 50 points for paid items and 25 for other items.</li>
+  </ul>
+  <p>Purpose of evaluation metrics:</p>
+  <ul>
+    <li>both user satisfaction and the success from an item (aka recruiter) perspective is taken into account</li>
+    <li>satisfied (and dissatisfied) premium users have a stronger impact than basic users.</li>
+    <li>paid content is promoted compared to non-paid content</li>
+  </ul>
       </div>
 
       <div id="dataset" class="lead">
@@ -132,9 +189,14 @@
         <ul>
           <li>login with your XING account to the submisson system: <a href="https://recsys.xing.com/">recsys.xing.com</a> (not online yet)</li>
           <li>create a team</li>
-          <li>accept the rules of the challenge (fair play, don't be evil)</li>
+          <li>accept the <a href="#rules">rules of the challenge</a> (fair play, don't be evil)</li>
           <li>download the data and get started...</li>
         </ul>
+      </div>
+
+      <div id="rules" class="lead">
+        <h2>Rules</h2>
+        <div class="alert alert-success" role="alert">Coming soon...</div>
       </div>
 
       <div class="lead">
@@ -247,11 +309,12 @@
         </ul>
         <p>Advisors:</p>
         <ul>
-          <li><a href="https://dms.sztaki.hu/en/people/robert-palovics">Róbert Pálovics</a>, <a href="https://dms.sztaki.hu/en">Hungarian Academy of Sciences</a> (godfather of the challenge)</li>
           <li><a href="https://dms.sztaki.hu/en/people/andras-benczur">András Benczúr</a>, <a href="https://dms.sztaki.hu/en">Hungarian Academy of Sciences</a></li>
+          <li><a href="https://dms.sztaki.hu/en/people/robert-palovics">Róbert Pálovics</a>, <a href="https://dms.sztaki.hu/en">Hungarian Academy of Sciences</a> (godfather of the challenge)</li>
           <li><a href="http://alans.se/">Alan Said</a>, <a href="http://his.se/en/Research/informatics/Skovde-Artificial-Intelligence-Lab/">University of Skövde</a></li>
         </ul>
       </div>
+
       <hr/>
       <div style="text-align:center">
         <a style="text-decoration: none;" href="https://xing.com" title="XING">
@@ -267,6 +330,9 @@
       </div>
 
     </div><!-- /.container -->
+
+
+
 
 
     <!-- JavaScript -->
