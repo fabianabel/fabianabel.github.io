@@ -179,7 +179,135 @@
 
       <div id="dataset" class="lead">
         <h2>Dataset</h2>
-        <div class="alert alert-success" role="alert">Coming soon...</div>
+        <p>
+          In the challenge, the task of the participants will be the following: given a XING user, the recommender should predict those job postings (items) that the user will interact with in the next week.
+          The traing dataset is supposed to be used for experimenting and training your models. You can split the 
+          interaction data into training and test data. For example: you can leave out the last 
+          complete week (of the year) from the interaction data and then try to predict whether 
+          a given user will _positively_ interact with an item within that week. Relevant items 
+          are those items on which a user clicked, bookmarked or replied (`interaction_type` = 1, 2 or 3). 
+        </p>
+        <h3> Anonymization, pseudonymization, noise </h3>
+        <p>
+          The traing dataset is a semi-synthetic sample of XING's dataset, i.e. it is not complete and enriched with 
+          noise in order anonymize the data. For example: 
+          <ul>
+            <li> the dataset contains artifical users </li>
+            <li> the dataset contains only a fraction of XING users and job postings </li>
+            <li> IDs are used instead of raw text for almost all attribute values (pseudonymization) </li>
+            <li> some attributes of the users may have been removed or flipped to <i>NULL / unknown</i>. </li>
+            <li> not all interactions of a user are contained in the dataset </li>
+            <li> some of the interactions are artificial (= have actually not been performed by the user) </li>
+            <li> timestamps have been shifted (but the order of interactions is kept) </li>
+          </ul>
+          Attempting to identify users or to reveal any private information about the users or information about 
+          the business from which the data is coming from is strictly forbidden (cf. [Rules](http://2016.recsyschallenge.com/)).
+          </p>
+
+          <h3> Interactions </h3>
+          <p>
+          Interactions are all transactions between a user and an item including
+          recruiter interest as well as impressions.
+          Fields: 
+          <ul>
+            <li> `user_id` ID of the user who performed the interaction (points to `users.id`) </li>
+            <li> `item_id` ID of the item on which the interaction was performed (points to `items.id`) </li>
+            <li> `created_at` a unix time stamp timestamp representing the time when the interaction got created </li>
+            <li> `interaction_type` the type of interaction that was performed on the item: <ul>
+                <li> 0 = <b>XING showed this item to a user (= impression)</b> </li>
+                <li> 1 = the user clicked on the item </li>
+                <li> 2 = the user bookmarked the item on XING </li>
+                <li> 3 = the user clicked on the _reply button_ or _application form button_ that is shown on some job postings</li>
+                <li> 4 = the user deleted a recommendation from his/her list of recommendation (clicking on "x") which has the effect that the recommendation will no longer been shown to the user and that a new recommendation item will be loaded and displayed to the user </li>
+                <li> 5 = <b>a recruiter from the items company showed interest into the user.</b> (e.g. clicked on the profile)</li>
+              </ul></li>
+          </ul>
+          </p>
+
+          <h3> Users </h3>
+          <p>
+          Details about those users who appear in the above datasets. Fields: 
+          <ul>
+            <li> `id` anonymized ID of the user (referenced as `user_id` in the other datasets above) </li>
+            <li> `jobroles` comma-separated list of jobrole terms (numeric IDs) that were extracted from the user's current job titles </li>
+            <li> `career_level` career level ID (e.g. beginner, experienced, manager): <ul>
+                <li> 0 = unknown </li>
+                <li> 1 = Student/Intern </li>
+                <li> 2 = Entry Level (Beginner) </li>
+                <li> 3 = Professional/Experienced </li>
+                <li> 4 = Manager (Manager/Supervisor) </li>
+                <li> 5 = Executive (VP, SVP, etc.) </li>
+                <li> 6 = Senior Executive (CEO, CFO, President)</li></ul></li>
+            <li> `discipline_id` anonymized IDs represent disciplines such as "Consulting", "HR", etc. </li>
+            <li> `industry_id` anonymized IDs represent industries such as "Internet", "Automotive", "Finance", etc. </li>
+            <li> `country` describes the country in which the user is currently working<ul> 
+                <li> `de` = Germany </li>
+                <li> `at` = Austria</li>
+                <li> `ch` = Switzerland </li>
+                <li> `non dach` = non of the above countries</li></ul></li>
+            <li> `region` is specified for some users who have as country `de`. Meaning of the regions see below</li>
+            <li> `experience_n_entries_class` identifies the number of CV entries that the user has listed as _work experiences_ <ul>
+                <li> 0 = no entries </li>
+                <li> 1 = 1<li>2 entries </li>
+                <li> 2 = 3<li>4 entries </li>
+                <li> 3 = 5 or more entries</li></ul></li>
+            <li> `experience_years_experience` is the estimated number of years of work experience that the user has<ul> 
+                <li> 0 = unknown </li>
+                <li> 1 = less than 1 year </li>
+                <li> 2 = 1 - 3 years </li>
+                <li> 3 = 3 - 5 years </li>
+                <li> 4 = 5 - 10 years </li>
+                <li> 5 = 10 - 20 years </li>
+                <li> 6 = more than 20 years </li> </ul> </li>
+            <li> `experience_years_in_current` is the estimated number of years that the user is already working in her current job. Meaning of numbers: same as `experience_years_experience` </li>
+            <li> `edu_degree` estimated university degree of the user<ul>  
+                <li> 0 or NULL = unknown </li>
+                <li> 1 = bachelor </li>
+                <li> 2 = master </li>
+                <li> 3 = phd </li> </ul> </li>
+            <li> `edu_fieldofstudies` comma<li>separated fields of studies that the user studied. `0` means "unknown" and `edu_fieldofstudies > 0` entries refer to broad field of studies such as _Engineering_, _Economics and Legal_,  ... </li>
+            <li> <b>`wtcj` predicted willingness to change jobs</b> <ul>
+                <li> 0 XING predicts the user won't change jobs soon </li>
+                <li> 1 XING predicts the user is interested in changing his current position </li> </ul> </li>
+            <li> <b>`premium` the user subscribed to XING's payed premium membership</b> <ul>
+                <li> 0 no subscription </li>
+                <li> 1 active subscription </li> </ul> </li>
+            </ul>
+          </p>
+
+          <h3> Items </h3>
+          <p>
+          Details about the job postings that were and should be recommended to the users. 
+          <ul>
+            <li> `id` anonymized ID of the item (referenced as `item_id` in the other datasets above) </li>
+            <li> `industry_id` anonymized IDs represent industries such as "Internet", "Automotive", "Finance", etc.</li>
+            <li> `discipline_id` anonymized IDs represent disciplines such as "Consulting", "HR", etc. </li>
+            <li> <b>`is_paid` indicates that the posting is a paid for by a compnay </b> </li>
+            <li> `career_level` career level ID (e.g. beginner, experienced, manager) <ul>
+                <li> 0 = unknown </li>
+                <li> 1 = Student/Intern </li>
+                <li> 2 = Entry Level (Beginner) </li>
+                <li> 3 = Professional/Experienced </li>
+                <li> 4 = Manager (Manager/Supervisor)</li>
+                <li> 5 = Executive (VP, SVP, etc.) </li>
+                <li> 6 = Senior Executive (CEO, CFO, President) </li> </ul> </li>
+            <li> `country` code of the country in which the job is offered </li>
+            <li> `latitude` latitude information (rounded to ca. 10km) </li>
+            <li> `longitude` longitude information (rounded to ca. 10km) </li>
+            <li> `region` is specified for some users who have as country `de`. Meaning of the regions: see below. </li>
+            <li> `employment` the type of emploment <ul>
+                <li> 0 = unknown </li>
+                <li> 1 = full-time </li>
+                <li> 2 = part-time  </li>
+                <li> 3 = freelancer </li>
+                <li> 4 = intern </li>
+                <li> 5 = voluntary </li>
+                <li> `created_at` a unix time stamp timestamp representing the time when the interaction got created </li>
+                <li> `title` concepts that have been extracted from the job title of the job posting (numeric IDs) </li>
+                <li> `tags` concepts that have been extracted from the tags, skills or company name </li>
+            </ul> </li>
+          </ul>
+          </p>
       </div>
 
 
